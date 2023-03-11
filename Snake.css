@@ -1,0 +1,32 @@
+div.container {
+    margin-top: 100px;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    display: flex;
+}
+
+div.area { 
+    border-color: green;
+    border-style: solid;
+    border-width: thick;
+    width: 600px;
+    height: 600px;
+}
+
+td {
+    width: 30px;
+    height: 30px;
+    position: relative;
+}
+
+td.dark {
+    background-color: rgb(90, 196, 28);
+    
+}
+
+td.light {
+    background-color: rgb(140, 214, 3);
+}
+
