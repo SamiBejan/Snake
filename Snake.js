@@ -22,3 +22,22 @@ function createGrid() {
         area.appendChild(row);
     }
 }
+
+let i = 9, j = 9;
+grid[i][j].classList.add("snake");
+
+function move(e) {
+    grid[i][j].classList.remove("snake");
+    if (e.key === "ArrowUp") {
+        --i;
+    } else if (e.key === "ArrowDown") {
+        ++i;
+    } else if (e.key === "ArrowLeft") {
+        --j;
+    } else if (e.key === "" || e.key === "ArrowRight") {
+        ++j;
+    }
+    grid[i][j].classList.add("snake");
+}
+
+window.addEventListener("keydown", move);
