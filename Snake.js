@@ -40,39 +40,47 @@ function setDirection(e) {
         (e.key === "ArrowLeft" || e.key === "ArrowRight") && (snake[0].dir === "ArrowLeft" || snake[0].dir === "ArrowRight"))) {
             turnPoints.unshift({"dir": e.key, "line": snake[0].line, "col": snake[0].col});
             snake[0].dir = turnPoints[0].dir;           
-    }
-    move();
-    
+    }   
 }
 
+var animate = setInterval(move, 100);
+
 function move() {
-    //We change the content of the cells through which the snake is moving
-    for (let k = 0; k < snake.length; ++k) {
-        grid[snake[k].line][snake[k].col].classList.remove("snake");
-        if (snake[k].dir === "ArrowUp") {
-            --snake[k].line;
-        } else if (snake[k].dir === "ArrowDown") {
-            ++snake[k].line;
-        } else if (snake[k].dir === "ArrowLeft") {
-            --snake[k].col;
-        } else if (snake[k].dir === "ArrowRight") {
-            ++snake[k].col;
+    //We check to see if the next head cell in a specific direction will be outside the grid or in the snake body
+    if ((snake[0].dir === "ArrowUp" && (snake[0].line - 1 === 0 || grid[snake[0].line - 1][snake[0].col].classList.contains("snake"))) ||
+    (snake[0].dir === "ArrowDown" && (snake[0].line + 1 === 21 || grid[snake[0].line + 1][snake[0].col].classList.contains("snake"))) ||
+    (snake[0].dir === "ArrowLeft" && (snake[0].col - 1 === 0 || grid[snake[0].line][snake[0].col - 1].classList.contains("snake"))) ||
+    (snake[0].dir === "ArrowRight" && (snake[0].col + 1 === 21 || grid[snake[0].line][snake[0].col + 1].classList.contains("snake")))) {
+        clearInterval(animate);
+    } else {
+        //We change the content of the cells through which the snake is moving
+        for (let k = 0; k < snake.length; ++k) {
+            grid[snake[k].line][snake[k].col].classList.remove("snake");
+            if (snake[k].dir === "ArrowUp") {
+                    --snake[k].line;
+            } else if (snake[k].dir === "ArrowDown") {
+                    ++snake[k].line;
+            } else if (snake[k].dir === "ArrowLeft") {
+                    --snake[k].col;             
+            } else if (snake[k].dir === "ArrowRight") {
+                    ++snake[k].col;
+            }
+            grid[snake[k].line][snake[k].col].classList.add("snake");  
         }
-        grid[snake[k].line][snake[k].col].classList.add("snake");
-    }
-    //We give the new directions to the snake cells if they passed a turnpoint
-    for (let k = 1; k < snake.length; ++k) {
-        for (let l = 0, end = 0; l < turnPoints.length && !end; ++l) {
-            if (snake[k].line === turnPoints[l].line && snake[k].col === turnPoints[l].col) {
-                snake[k].dir = turnPoints[l].dir;
-                end = 1;
-            }          
+        //We give the new directions to the snake cells if they passed a turnpoint
+        for (let k = 1; k < snake.length; ++k) {
+            for (let l = 0, end = 0; l < turnPoints.length && !end; ++l) {
+                if (snake[k].line === turnPoints[l].line && snake[k].col === turnPoints[l].col) {
+                    snake[k].dir = turnPoints[l].dir;
+                    end = 1;
+                }          
+            }
         }
-    }
-    //We delete the last turnpoint if the last snake cell passed it
-    if (turnPoints.length >= 1 && snake[snake.length - 1].line === turnPoints[turnPoints.length - 1].line && 
-        snake[snake.length - 1].col === turnPoints[turnPoints.length - 1].col) {
-            turnPoints.pop();
+        //We delete the last turnpoint if the last snake cell passed it
+        if (turnPoints.length >= 1 && snake[snake.length - 1].line === turnPoints[turnPoints.length - 1].line && 
+            snake[snake.length - 1].col === turnPoints[turnPoints.length - 1].col) {
+                turnPoints.pop();
+        }
     }
 }
 
