@@ -2,15 +2,16 @@ const area = document.querySelector(".area");
 const startButton = document.querySelector(".start");
 let grid = new Array(21);
 let snake = new Array(7);
+let applesEaten = 0;
 let animate;
 
 createGrid();
 
+//we create the grid
 function createGrid() {
     for (let i = 1; i < grid.length; ++i) {
         grid[i] = new Array(21);
     }
-
     //we create each row and cell
     for (let i = 1; i < grid.length; ++i) {
         const row = document.createElement("tr");
@@ -37,6 +38,7 @@ function createSnake() {
         previousSnake[0].classList.remove("snake");
     }
     //We build the new snake
+    snake = new Array(7);
     for (let k = 0, j = 9; k < snake.length; ++k, --j) {
         snake[k] =  {"line": 9, "col": j};
         grid[snake[k].line][snake[k].col].classList.add("snake");
@@ -44,9 +46,11 @@ function createSnake() {
 }
 
 function startGame() {
+    applesEaten = 0;
+    document.getElementById("score").innerText = "Score " + applesEaten;
     createSnake();
     clearInterval(animate);
-    animate = setInterval(move, 200);
+    animate = setInterval(move, 150);
     let dir = ["ArrowRight"];
     function setDirection(e) {
         if (e && e.key != dir[dir.length - 1] && (e.key === "ArrowUp" || e.key === "ArrowDown" || e.key === "ArrowLeft" || e.key === "ArrowRight") &&
@@ -61,11 +65,13 @@ function startGame() {
         dir[0] === "ArrowDown" && (snake[0].line + 1 === 21 || grid[snake[0].line + 1][snake[0].col].classList.contains("snake")) ||
         dir[0] === "ArrowLeft" && (snake[0].col - 1 === 0 || grid[snake[0].line][snake[0].col - 1].classList.contains("snake")) ||
         dir[0] === "ArrowRight" && (snake[0].col + 1 === 21 || grid[snake[0].line][snake[0].col + 1].classList.contains("snake"))) {
-            endGame();
+            clearInterval(animate);
+            startButton.innerText = "Start Again";
             window.removeEventListener("keydown", setDirection);
         } else {
             // we move the snake by removing the snake tail cell and updating the snake head
             grid[snake[snake.length - 1].line][snake[snake.length - 1].col].classList.remove("snake");
+            let prevTail = {"line": snake[snake.length - 1].line, "col": snake[snake.length - 1].col};
             snake.pop();
             if (dir[0] === "ArrowUp") {
                 snake.unshift({"line": snake[0].line - 1, "col": snake[0].col});
@@ -80,14 +86,35 @@ function startGame() {
             if (dir.length > 1) {
                 dir.shift();
             }
+            // we increase the snake and generate a new apple
+            if (grid[snake[0].line][snake[0].col].classList.contains("apple")) {
+                snake.push({"line": prevTail.line, "col": prevTail.col});
+                grid[snake[snake.length - 1].line][snake[snake.length - 1].col].classList.add("snake");
+                ++applesEaten;
+                document.getElementById("score").innerText = "Score " + applesEaten;
+                generateApple();
+           }
         }
     }
     window.addEventListener("keydown", setDirection);
 }
 
-function endGame() {
-    clearInterval(animate);
-    startButton.innerText = "Start Again";
+generateApple();
+
+function generateApple() {
+    const apples = document.getElementsByClassName("apple");
+    while (apples.length) {
+        apples[0].classList.remove("apple");
+    }
+    let validPlace = false;
+    while (!validPlace) {
+        const line = Math.ceil(Math.random()* 20);
+        const col = Math.ceil(Math.random()* 20);
+        if (!grid[line][col].classList.contains("snake")) {
+            validPlace = true;
+            grid[line][col].classList.add("apple");
+        }
+    }
 }
 
 startButton.addEventListener("click", startGame);
