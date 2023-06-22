@@ -3,16 +3,25 @@ div.container {
     position: relative;
     align-items: center;
     justify-content: center;
-    text-align: center;
     display: flex;
+    flex-direction: column;
 }
 
 div.area { 
     border-color: green;
     border-style: solid;
     border-width: thick;
-    width: 600px;
-    height: 600px;
+}
+
+div.topBar {
+    position: relative;
+    display: flex;
+    margin-bottom: 0.5%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    white-space: nowrap;
+    gap: 170%;
 }
 
 td {
@@ -32,4 +41,8 @@ td.light {
 
 td.snake {
     background-color: rgb(182, 135, 74);
+}
+
+td.apple {
+    background-color: red;
 }
