@@ -45,6 +45,9 @@ function createSnake() {
     }
 }
 
+/*A new game starts. The number of apples eaten is reset to 0. 
+A new snake is created and the movement starts. The default direction is right. 
+Also, the keyboard input is enabled */
 function startGame() {
     applesEaten = 0;
     document.getElementById("score").innerText = "Score " + applesEaten;
@@ -62,10 +65,12 @@ function setDirection(e) {
     }
 }
 
+//We check if the key pressed is an arrow
 function isArrowKey(key) {
     return (key === "ArrowUp" || key === "ArrowDown" || key === "ArrowLeft" || key === "ArrowRight");
 }
 
+//We check if the direction imposed from keyboard is opposite to the current one
 function isOppositeDirection(key) {
     return ((key === "ArrowUp" || key === "ArrowDown") && (dir[dir.length - 1] === "ArrowUp" || dir[dir.length - 1] === "ArrowDown") ||
     (key === "ArrowLeft" || key === "ArrowRight") && (dir[dir.length - 1] === "ArrowLeft" || dir[dir.length - 1] === "ArrowRight"));
@@ -105,12 +110,14 @@ function move() {
         }
     }
 }
-    
+
+//We check if the snake hit a wall
 function hitWall() {
     return ((dir[0] === "ArrowUp" && snake[0].line - 1 === 0) || (dir[0] === "ArrowDown" && snake[0].line + 1 === 21) ||
     (dir[0] === "ArrowLeft" && snake[0].col - 1 === 0) || (dir[0] === "ArrowRight" && snake[0].col + 1 === 21));
 }
 
+//we check if the snake head hit its body
 function hitSnake() {
     return ((dir[0] === "ArrowUp" && grid[snake[0].line - 1][snake[0].col].classList.contains("snake")) ||
     (dir[0] === "ArrowDown" && grid[snake[0].line + 1][snake[0].col].classList.contains("snake")) ||
@@ -118,7 +125,7 @@ function hitSnake() {
     (dir[0] === "ArrowRight" && grid[snake[0].line][snake[0].col + 1].classList.contains("snake")));
 }
 
-//We generate the apple
+//A new apple is created
 function generateApple() {
     const apples = document.getElementsByClassName("apple");
     while (apples.length) {
